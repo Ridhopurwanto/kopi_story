@@ -1466,7 +1466,7 @@
     <div class="beans-container">
       <div class="section-header reveal">
         <span class="section-tag">Chapter 01 — Identitas Biji</span>
-        <h2 class="section-title"><em>Yuk</em>, kenalan sama <em>biji</em> </h2>
+        <h2 class="section-title"><em>Yuk</em>, kenalan sama <em>Biji</em> </h2>
         <p class="section-subtitle">Dua karakter berbeda, satu cinta yang sama: kopi</p>
       </div>
 
@@ -1536,7 +1536,7 @@
     <div class="map-container">
       <div class="section-header reveal">
         <span class="section-tag">Chapter 02 — Sebaran Wilayah</span>
-        <h2 class="section-title">Peta <em>Perkebunan</em> Kopi</h2>
+        <h2 class="section-title">Bentang <em>Alam</em> Sang Penghasil <em>Biji</em></h2>
         <p class="section-subtitle">Data pertanian kopi komprehensif di seluruh Indonesia</p>
 
         <div style="max-width:800px; margin: 1.5rem auto 0; text-align:center;">
@@ -1619,7 +1619,7 @@
     <div class="trend-container">
       <div class="section-header reveal">
         <span class="section-tag">Chapter 03 — Industri Kafe</span>
-        <h2 class="section-title">Booming <em>Gerai</em> Kopi</h2>
+        <h2 class="section-title">Budaya <em>Nongkrong</em> dalam Angka</h2>
         <p class="section-subtitle">Pertumbuhan gerai kopi Indonesia dari 2022–2025</p>
 
         <div style="max-width:800px; margin: 1.5rem auto 0; text-align:center;">
@@ -1695,7 +1695,7 @@
     <div class="ekspor-container">
       <div class="section-header reveal">
         <span class="section-tag">Chapter 04 — Perdagangan Global</span>
-        <h2 class="section-title">Kopi Indonesia <em>Mendunia</em></h2>
+        <h2 class="section-title">Kopi <em>Nusantara</em> di Panggung <em>Dunia</em></h2>
         <p class="section-subtitle">Dari kebun nusantara ke cangkir dunia — jejak ekspor kopi Indonesia</p>
       </div>
 
@@ -1990,101 +1990,59 @@
       }
     });
 
-    // ===== EKSPOR IMPOR DUAL-METRIC CHART =====
-    const eiCtx = document.getElementById('eksporImporChart').getContext('2d');
-    const e23 = EKSPOR_IMPOR[0], e24 = EKSPOR_IMPOR[1];
+    // ===== TRADE CARDS (Update to display only values) =====
+    const tradeContainer = document.getElementById('trade-cards');
+    EKSPOR_IMPOR.forEach(d => {
+      // Ekspor card
+      const eCard = document.createElement('div');
+      eCard.className = 'trade-card ekspor';
+      eCard.innerHTML = `
+    <div class="trade-year">📅 ${d.tahun}</div>
+    <div class="trade-type">🚀 EKSPOR</div>
+    <div class="trade-number">${(d.ekspor_vol / 1000).toFixed(0)} Rb <small style="font-size:1rem">ton</small></div>
+    <div class="trade-unit">📦 Volume</div>
+    <div class="trade-number" style="font-size:1.4rem;margin-top:0.5rem;">$${(d.ekspor_val / 1000000).toFixed(2)} M</div>
+    <div class="trade-unit">💰 Nilai USD</div>
+  `;
+      tradeContainer.appendChild(eCard);
 
-    const labelsEI = ['Eks 2023', 'Imp 2023', 'Eks 2024', 'Imp 2024'];
-    const dataVol = [e23.ekspor_vol, e23.impor_vol, e24.ekspor_vol, e24.impor_vol];
-    const dataVal = [e23.ekspor_val, e23.impor_val, e24.ekspor_val, e24.impor_val];
-    const bgColors = [
-      'rgba(212, 168, 75, 0.6)', 'rgba(122, 184, 122, 0.6)',
-      'rgba(212, 168, 75, 0.9)', 'rgba(122, 184, 122, 0.9)'
+      // Impor card
+      const iCard = document.createElement('div');
+      iCard.className = 'trade-card impor';
+      iCard.innerHTML = `
+    <div class="trade-year">📅 ${d.tahun}</div>
+    <div class="trade-type" style="color:#7ab87a;">📥 IMPOR</div>
+    <div class="trade-number" style="color:#7ab87a;">${(d.impor_vol / 1000).toFixed(1)} Rb <small style="font-size:1rem">ton</small></div>
+    <div class="trade-unit">📦 Volume</div>
+    <div class="trade-number" style="font-size:1.4rem;margin-top:0.5rem;color:#7ab87a;">$${(d.impor_val / 1000).toFixed(0)} Rb</div>
+    <div class="trade-unit">💰 Nilai USD</div>
+  `;
+      tradeContainer.appendChild(iCard);
+    });
+
+    // ===== CARGO SHIP CHART GENG =====
+    const cargoStacks = document.getElementById('cargo-stacks');
+    const shipMaxVol = Math.max(EKSPOR_IMPOR[0].ekspor_vol, EKSPOR_IMPOR[1].ekspor_vol);
+
+    const cargoData = [
+      { label: 'Eks 2023', vol: EKSPOR_IMPOR[0].ekspor_vol, color: '#d4a84b' },
+      { label: 'Eks 2024', vol: EKSPOR_IMPOR[1].ekspor_vol, color: '#c47e3a' },
+      { label: 'Imp 2023', vol: EKSPOR_IMPOR[0].impor_vol, color: '#7ab87a' },
+      { label: 'Imp 2024', vol: EKSPOR_IMPOR[1].impor_vol, color: '#3d6e3a' }
     ];
-    const borderColors = ['#d4a84b', '#7ab87a', '#d4a84b', '#7ab87a'];
 
-    let currentMetricEI = 'vol';
-
-    let eiChart = new Chart(eiCtx, {
-      type: 'bar',
-      data: {
-        labels: labelsEI,
-        datasets: [{
-          label: 'Volume (Ton)',
-          data: dataVol,
-          backgroundColor: bgColors,
-          borderColor: borderColors,
-          borderWidth: 2,
-          borderRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: 'rgba(26,10,0,0.95)',
-            titleColor: '#d4a84b',
-            bodyColor: '#f5ead8',
-            callbacks: {
-              label: function (ctx) {
-                let val = ctx.parsed.y;
-                if (currentMetricEI === 'vol') {
-                  return ` Volume: ${val.toLocaleString('id-ID')} Ton`;
-                } else {
-                  // val is already in Ribu USD, so display as Ribu USD or Juta USD
-                  let jutaUsd = (val / 1000).toFixed(2);
-                  return ` Nilai: ${val.toLocaleString('id-ID')} Rb USD ($${jutaUsd} Juta)`;
-                }
-              }
-            }
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: 'rgba(255,255,255,0.05)' },
-            ticks: { color: 'rgba(245,234,216,0.7)', font: { family: "'Space Mono'" } }
-          },
-          y: {
-            grid: { color: 'rgba(255,255,255,0.05)' },
-            ticks: { color: 'rgba(245,234,216,0.7)', font: { family: "'Space Mono'" } }
-          }
-        }
-      }
-    });
-
-    const btnVol = document.getElementById('btn-chart-vol');
-    const btnVal = document.getElementById('btn-chart-val');
-
-    btnVol.addEventListener('click', () => {
-      currentMetricEI = 'vol';
-      btnVol.style.background = 'var(--gold)';
-      btnVol.style.color = '#1a0a00';
-      btnVol.style.boxShadow = '0 0 10px rgba(212,168,75,0.5)';
-
-      btnVal.style.background = 'rgba(212,168,75,0.1)';
-      btnVal.style.color = 'var(--gold)';
-      btnVal.style.boxShadow = 'none';
-
-      eiChart.data.datasets[0].label = 'Volume (Ton)';
-      eiChart.data.datasets[0].data = dataVol;
-      eiChart.update();
-    });
-
-    btnVal.addEventListener('click', () => {
-      currentMetricEI = 'val';
-      btnVal.style.background = 'var(--gold)';
-      btnVal.style.color = '#1a0a00';
-      btnVal.style.boxShadow = '0 0 10px rgba(212,168,75,0.5)';
-
-      btnVol.style.background = 'rgba(212,168,75,0.1)';
-      btnVol.style.color = 'var(--gold)';
-      btnVol.style.boxShadow = 'none';
-
-      eiChart.data.datasets[0].label = 'Nilai (Ribu USD)';
-      eiChart.data.datasets[0].data = dataVal;
-      eiChart.update();
+    cargoData.forEach(item => {
+      const hPct = Math.max((item.vol / shipMaxVol) * 100, 5); // min 5% height
+      const stack = document.createElement('div');
+      stack.className = 'cargo-stack';
+      stack.innerHTML = `
+        <div class="cargo-label-top">${(item.vol / 1000).toFixed(0)} Rb</div>
+        <div class="cargo-box-wrapper" style="height: ${hPct}%;">
+          <div class="cargo-box" style="background:${item.color};"></div>
+        </div>
+        <div class="cargo-label-bottom">${item.label}</div>
+      `;
+      cargoStacks.appendChild(stack);
     });
 
     // ===== NEGARA BARS =====
