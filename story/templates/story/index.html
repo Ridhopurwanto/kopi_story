@@ -1166,6 +1166,53 @@
       z-index: 1;
     }
 
+    /* ======= FLOATING DECO ICONS ======= */
+    .deco-icon {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
+      filter: drop-shadow(0 4px 15px rgba(212, 168, 75, 0.3));
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      z-index: 0;
+    }
+
+    .deco-icon.visible {
+      opacity: 0.55;
+    }
+
+    .deco-icon img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    @keyframes float-gentle {
+
+      0%,
+      100% {
+        transform: translateY(0px) rotate(var(--rot, 0deg));
+      }
+
+      50% {
+        transform: translateY(-12px) rotate(var(--rot, 0deg));
+      }
+    }
+
+    .deco-icon.floating {
+      animation: float-gentle 5s ease-in-out infinite;
+    }
+
+    .deco-icon.floating-slow {
+      animation: float-gentle 8s ease-in-out infinite;
+    }
+
+    /* Each section wrapper is relative so deco icons are positioned inside it */
+    section,
+    #hero {
+      position: relative;
+      overflow: visible;
+    }
+
     /* ======= FLOATING COFFEE BEANS ======= */
     .coffee-beans-bg {
       position: fixed;
@@ -1395,6 +1442,27 @@
 
   <!-- ===== ARABICA VS ROBUSTA ===== -->
   <section id="beans">
+    <!-- Deco icons: Chapter 01 -->
+    <!-- top-left, large -->
+    <div class="deco-icon floating" style="width:120px; top:4%; left:3%; --rot:-12deg;">
+      <img src="{% static 'story/assets/1.webp' %}" alt="">
+    </div>
+    <!-- mid-left, small -->
+    <div class="deco-icon floating-slow" style="width:60px; top:52%; left:1%; --rot:18deg;">
+      <img src="{% static 'story/assets/3.webp' %}" alt="">
+    </div>
+    <!-- bottom-left, medium -->
+    <div class="deco-icon floating" style="width:85px; top:80%; left:4%; --rot:5deg;">
+      <img src="{% static 'story/assets/4.webp' %}" alt="">
+    </div>
+    <!-- top-right, medium -->
+    <div class="deco-icon floating-slow" style="width:75px; top:6%; right:3%; --rot:22deg;">
+      <img src="{% static 'story/assets/5.webp' %}" alt="">
+    </div>
+    <!-- mid-right, small -->
+    <div class="deco-icon floating" style="width:55px; top:45%; right:1.5%; --rot:-15deg;">
+      <img src="{% static 'story/assets/2.webp' %}" alt="">
+    </div>
     <div class="beans-container">
       <div class="section-header reveal">
         <span class="section-tag">Chapter 01 — Identitas Biji</span>
@@ -1448,6 +1516,23 @@
 
   <!-- ===== MAP ===== -->
   <section id="map-section">
+    <!-- Deco icons: Chapter 02 -->
+    <!-- top-left, medium -->
+    <div class="deco-icon floating-slow" style="width:90px; top:3%; left:2%; --rot:-8deg;">
+      <img src="{% static 'story/assets/7.webp' %}" alt="">
+    </div>
+    <!-- lower-left, small -->
+    <div class="deco-icon floating" style="width:58px; top:62%; left:1.5%; --rot:20deg;">
+      <img src="{% static 'story/assets/8.webp' %}" alt="">
+    </div>
+    <!-- top-right, small -->
+    <div class="deco-icon floating" style="width:65px; top:5%; right:2%; --rot:15deg;">
+      <img src="{% static 'story/assets/9.webp' %}" alt="">
+    </div>
+    <!-- mid-right, large -->
+    <div class="deco-icon floating-slow" style="width:110px; top:38%; right:1%; --rot:-22deg;">
+      <img src="{% static 'story/assets/10.webp' %}" alt="">
+    </div>
     <div class="map-container">
       <div class="section-header reveal">
         <span class="section-tag">Chapter 02 — Sebaran Wilayah</span>
@@ -1456,8 +1541,8 @@
 
         <div style="max-width:800px; margin: 1.5rem auto 0; text-align:center;">
           <p style="font-size:1.5rem;line-height:1.8;color:rgba(245,234,216,0.7);font-style:italic;">
-               Sebagian besar kopi Indonesia berasal dari Sumatra, tapi daerah lain juga punya ciri khasnya masing-masing. 
-               Itulah yang bikin setiap cangkir kopi punya rasa dan cerita berbeda 
+            Sebagian besar kopi Indonesia berasal dari Sumatra, tapi daerah lain juga punya ciri khasnya masing-masing.
+            Itulah yang bikin setiap cangkir kopi punya rasa dan cerita berbeda
           </p>
         </div>
         <div style="margin-top: 1.5rem;">
@@ -1514,6 +1599,23 @@
 
   <!-- ===== TREND ===== -->
   <section id="trend">
+    <!-- Deco icons: Chapter 03 -->
+    <!-- top-left, large -->
+    <div class="deco-icon floating" style="width:100px; top:4%; left:3%; --rot:-5deg;">
+      <img src="{% static 'story/assets/13.webp' %}" alt="">
+    </div>
+    <!-- mid-left, small -->
+    <div class="deco-icon floating-slow" style="width:55px; top:55%; left:1%; --rot:14deg;">
+      <img src="{% static 'story/assets/2.webp' %}" alt="">
+    </div>
+    <!-- top-right, medium -->
+    <div class="deco-icon floating-slow" style="width:80px; top:8%; right:2.5%; --rot:-18deg;">
+      <img src="{% static 'story/assets/10.webp' %}" alt="">
+    </div>
+    <!-- bottom-right, small -->
+    <div class="deco-icon floating" style="width:60px; top:75%; right:1.5%; --rot:10deg;">
+      <img src="{% static 'story/assets/14.webp' %}" alt="">
+    </div>
     <div class="trend-container">
       <div class="section-header reveal">
         <span class="section-tag">Chapter 03 — Industri Kafe</span>
@@ -1522,8 +1624,8 @@
 
         <div style="max-width:800px; margin: 1.5rem auto 0; text-align:center;">
           <p style="font-size:1.5rem;line-height:1.8;color:rgba(245,234,216,0.7);font-style:italic;">
-            Beberapa tahun terakhir, coffee shop tumbuh pesat di mana-mana. 
-            Ngopi sekarang bukan cuma soal rasa, tapi juga tempat berkumpul, bekerja, dan menikmati suasana 
+            Beberapa tahun terakhir, coffee shop tumbuh pesat di mana-mana.
+            Ngopi sekarang bukan cuma soal rasa, tapi juga tempat berkumpul, bekerja, dan menikmati suasana
           </p>
         </div>
       </div>
@@ -1569,6 +1671,27 @@
 
   <!-- ===== EKSPOR IMPOR ===== -->
   <section id="ekspor">
+    <!-- Deco icons: Chapter 04 -->
+    <!-- top-left, medium -->
+    <div class="deco-icon floating" style="width:85px; top:4%; left:2%; --rot:8deg;">
+      <img src="{% static 'story/assets/6.webp' %}" alt="">
+    </div>
+    <!-- mid-left, large -->
+    <div class="deco-icon floating-slow" style="width:115px; top:48%; left:0.5%; --rot:-12deg;">
+      <img src="{% static 'story/assets/11.webp' %}" alt="">
+    </div>
+    <!-- top-right, small -->
+    <div class="deco-icon floating-slow" style="width:62px; top:5%; right:2.5%; --rot:20deg;">
+      <img src="{% static 'story/assets/12.webp' %}" alt="">
+    </div>
+    <!-- bottom-right, medium -->
+    <div class="deco-icon floating" style="width:90px; top:72%; right:1%; --rot:-8deg;">
+      <img src="{% static 'story/assets/14.webp' %}" alt="">
+    </div>
+    <!-- bottom-left, small -->
+    <div class="deco-icon floating" style="width:55px; top:80%; left:3%; --rot:25deg;">
+      <img src="{% static 'story/assets/3.webp' %}" alt="">
+    </div>
     <div class="ekspor-container">
       <div class="section-header reveal">
         <span class="section-tag">Chapter 04 — Perdagangan Global</span>
@@ -1578,53 +1701,31 @@
 
       <div class="reveal" style="max-width:800px;margin:0 auto 3rem;text-align:center;">
         <p style="font-size:1.5rem;line-height:1.8;color:rgba(245,234,216,0.7);font-style:italic;">
-          Kopi Indonesia tidak hanya dinikmati di dalam negeri, tapi juga sudah dikenal di pasar global. 
+          Kopi Indonesia tidak hanya dinikmati di dalam negeri, tapi juga sudah dikenal di pasar global.
           Cita rasanya yang khas membuat kopi kita terus melangkah ke panggung dunia
 
         </p>
       </div>
 
-      <div class="trade-cards reveal" id="trade-cards"></div>
-
-      <div class="chart-box reveal" style="margin-bottom:2rem;">
-        <div class="ship-chart-container reveal">
-          <h3 style="font-family:'Playfair Display', serif; color:var(--gold); margin-bottom:1rem; text-align:center;">
-            🚢 Muatan Ekspor vs Impor Kopi (Ton)</h3>
-          <p style="text-align:center; font-size:0.85rem; color:rgba(245,234,216,0.6); margin-bottom:3rem;">Tinggi
-            tumpukan kontainer mewakili volume perdagangan kopi (2023-2024)</p>
-
-          <div class="cargo-ship-chart" id="cargo-ship-chart">
-            <!-- Ship Hull (Bottom) -->
-            <div class="ship-hull">
-              <div class="ship-bow"></div>
-              <div class="ship-body">
-                <span>Nusantara Express</span>
-                <div class="waves"></div>
-              </div>
-              <div class="ship-stern">
-                <div class="ship-cabin"></div>
-              </div>
-            </div>
-
-            <!-- Cargo Containers (Bars) -->
-            <div class="cargo-stacks" id="cargo-stacks">
-              <!-- Rendered via JS -->
-            </div>
-          </div>
-
-          <div style="max-width:800px; margin: 3rem auto 0; text-align:center;">
-            <p style="font-size:1rem;line-height:1.8;color:rgba(245,234,216,0.7);font-style:italic;">
-              👀 Dari muatan kapal di atas, terlihat jelas ketimpangan besar:
-              Kopi yang kita ekspor melimpah ruah dibanding yang kita impor. Indonesia adalah pemain raksasa
-              dalam suplai kopi dunia, bukan konsumen produk asing.
-            </p>
-          </div>
+      <div class="chart-box reveal" style="max-width:900px; margin: 0 auto 3rem; text-align:center;">
+        <h3 style="margin-bottom:1.5rem; color:var(--gold);">Perbandingan Ekspor & Impor (2023-2024)</h3>
+        <div style="margin-bottom: 1.5rem;">
+          <button id="btn-chart-vol"
+            style="background:var(--gold); color:#1a0a00; padding:0.6rem 1.5rem; border:none; border-radius:20px; font-weight:bold; margin-right:1rem; cursor:pointer; font-family:'Space Mono', monospace; font-size:0.8rem; box-shadow:0 0 10px rgba(212,168,75,0.5);">📦
+            Volume (Ton)</button>
+          <button id="btn-chart-val"
+            style="background:rgba(212,168,75,0.1); color:var(--gold); border:1px solid var(--gold); padding:0.6rem 1.5rem; border-radius:20px; font-weight:bold; cursor:pointer; font-family:'Space Mono', monospace; font-size:0.8rem;">💰
+            Nilai (Ribu USD)</button>
         </div>
-        <div class="top-negara reveal">
-          <h3>� Top 5 Negara Tujuan Ekspor Kopi Indonesia (2024)</h3>
-          <div class="negara-bars" id="negara-bars"></div>
+        <div class="chart-wrap" style="height:350px;">
+          <canvas id="eksporImporChart"></canvas>
         </div>
       </div>
+      <div class="top-negara reveal">
+        <h3>🏆 Top 5 Negara Tujuan Ekspor Kopi Indonesia (2024)</h3>
+        <div class="negara-bars" id="negara-bars"></div>
+      </div>
+    </div>
   </section>
 
   <!-- ===== FOOTER ===== -->
@@ -1659,6 +1760,17 @@
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ===== DECO ICON SCROLL REVEAL =====
+    const decoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          decoObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.deco-icon').forEach(el => decoObserver.observe(el));
 
     // ===== BEAN DETAIL PANELS =====
     const listArabica = document.getElementById('list-arabica');
@@ -1878,59 +1990,101 @@
       }
     });
 
-    // ===== TRADE CARDS (Update to display only values) =====
-    const tradeContainer = document.getElementById('trade-cards');
-    EKSPOR_IMPOR.forEach(d => {
-      // Ekspor card
-      const eCard = document.createElement('div');
-      eCard.className = 'trade-card ekspor';
-      eCard.innerHTML = `
-    <div class="trade-year">📅 ${d.tahun}</div>
-    <div class="trade-type">🚀 EKSPOR</div>
-    <div class="trade-number">${(d.ekspor_vol / 1000).toFixed(0)} Rb <small style="font-size:1rem">ton</small></div>
-    <div class="trade-unit">📦 Volume</div>
-    <div class="trade-number" style="font-size:1.4rem;margin-top:0.5rem;">$${(d.ekspor_val / 1000000).toFixed(2)} M</div>
-    <div class="trade-unit">💰 Nilai USD</div>
-  `;
-      tradeContainer.appendChild(eCard);
+    // ===== EKSPOR IMPOR DUAL-METRIC CHART =====
+    const eiCtx = document.getElementById('eksporImporChart').getContext('2d');
+    const e23 = EKSPOR_IMPOR[0], e24 = EKSPOR_IMPOR[1];
 
-      // Impor card
-      const iCard = document.createElement('div');
-      iCard.className = 'trade-card impor';
-      iCard.innerHTML = `
-    <div class="trade-year">📅 ${d.tahun}</div>
-    <div class="trade-type" style="color:#7ab87a;">📥 IMPOR</div>
-    <div class="trade-number" style="color:#7ab87a;">${(d.impor_vol / 1000).toFixed(1)} Rb <small style="font-size:1rem">ton</small></div>
-    <div class="trade-unit">📦 Volume</div>
-    <div class="trade-number" style="font-size:1.4rem;margin-top:0.5rem;color:#7ab87a;">$${(d.impor_val / 1000).toFixed(0)} Rb</div>
-    <div class="trade-unit">💰 Nilai USD</div>
-  `;
-      tradeContainer.appendChild(iCard);
+    const labelsEI = ['Eks 2023', 'Imp 2023', 'Eks 2024', 'Imp 2024'];
+    const dataVol = [e23.ekspor_vol, e23.impor_vol, e24.ekspor_vol, e24.impor_vol];
+    const dataVal = [e23.ekspor_val, e23.impor_val, e24.ekspor_val, e24.impor_val];
+    const bgColors = [
+      'rgba(212, 168, 75, 0.6)', 'rgba(122, 184, 122, 0.6)',
+      'rgba(212, 168, 75, 0.9)', 'rgba(122, 184, 122, 0.9)'
+    ];
+    const borderColors = ['#d4a84b', '#7ab87a', '#d4a84b', '#7ab87a'];
+
+    let currentMetricEI = 'vol';
+
+    let eiChart = new Chart(eiCtx, {
+      type: 'bar',
+      data: {
+        labels: labelsEI,
+        datasets: [{
+          label: 'Volume (Ton)',
+          data: dataVol,
+          backgroundColor: bgColors,
+          borderColor: borderColors,
+          borderWidth: 2,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(26,10,0,0.95)',
+            titleColor: '#d4a84b',
+            bodyColor: '#f5ead8',
+            callbacks: {
+              label: function (ctx) {
+                let val = ctx.parsed.y;
+                if (currentMetricEI === 'vol') {
+                  return ` Volume: ${val.toLocaleString('id-ID')} Ton`;
+                } else {
+                  // val is already in Ribu USD, so display as Ribu USD or Juta USD
+                  let jutaUsd = (val / 1000).toFixed(2);
+                  return ` Nilai: ${val.toLocaleString('id-ID')} Rb USD ($${jutaUsd} Juta)`;
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: 'rgba(245,234,216,0.7)', font: { family: "'Space Mono'" } }
+          },
+          y: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: 'rgba(245,234,216,0.7)', font: { family: "'Space Mono'" } }
+          }
+        }
+      }
     });
 
-    // ===== CARGO SHIP CHART GENG =====
-    const cargoStacks = document.getElementById('cargo-stacks');
-    const shipMaxVol = Math.max(EKSPOR_IMPOR[0].ekspor_vol, EKSPOR_IMPOR[1].ekspor_vol);
+    const btnVol = document.getElementById('btn-chart-vol');
+    const btnVal = document.getElementById('btn-chart-val');
 
-    const cargoData = [
-      { label: 'Eks 2023', vol: EKSPOR_IMPOR[0].ekspor_vol, color: '#d4a84b' },
-      { label: 'Eks 2024', vol: EKSPOR_IMPOR[1].ekspor_vol, color: '#c47e3a' },
-      { label: 'Imp 2023', vol: EKSPOR_IMPOR[0].impor_vol, color: '#7ab87a' },
-      { label: 'Imp 2024', vol: EKSPOR_IMPOR[1].impor_vol, color: '#3d6e3a' }
-    ];
+    btnVol.addEventListener('click', () => {
+      currentMetricEI = 'vol';
+      btnVol.style.background = 'var(--gold)';
+      btnVol.style.color = '#1a0a00';
+      btnVol.style.boxShadow = '0 0 10px rgba(212,168,75,0.5)';
 
-    cargoData.forEach(item => {
-      const hPct = Math.max((item.vol / shipMaxVol) * 100, 5); // min 5% height
-      const stack = document.createElement('div');
-      stack.className = 'cargo-stack';
-      stack.innerHTML = `
-        <div class="cargo-label-top">${(item.vol / 1000).toFixed(0)} Rb</div>
-        <div class="cargo-box-wrapper" style="height: ${hPct}%;">
-          <div class="cargo-box" style="background:${item.color};"></div>
-        </div>
-        <div class="cargo-label-bottom">${item.label}</div>
-      `;
-      cargoStacks.appendChild(stack);
+      btnVal.style.background = 'rgba(212,168,75,0.1)';
+      btnVal.style.color = 'var(--gold)';
+      btnVal.style.boxShadow = 'none';
+
+      eiChart.data.datasets[0].label = 'Volume (Ton)';
+      eiChart.data.datasets[0].data = dataVol;
+      eiChart.update();
+    });
+
+    btnVal.addEventListener('click', () => {
+      currentMetricEI = 'val';
+      btnVal.style.background = 'var(--gold)';
+      btnVal.style.color = '#1a0a00';
+      btnVal.style.boxShadow = '0 0 10px rgba(212,168,75,0.5)';
+
+      btnVol.style.background = 'rgba(212,168,75,0.1)';
+      btnVol.style.color = 'var(--gold)';
+      btnVol.style.boxShadow = 'none';
+
+      eiChart.data.datasets[0].label = 'Nilai (Ribu USD)';
+      eiChart.data.datasets[0].data = dataVal;
+      eiChart.update();
     });
 
     // ===== NEGARA BARS =====
