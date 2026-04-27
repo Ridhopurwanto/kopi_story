@@ -76,11 +76,20 @@
     }
 
     .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       font-family: 'Playfair Display', serif;
       font-size: 1.4rem;
       font-weight: 900;
       letter-spacing: 0.05em;
       color: var(--gold);
+    }
+
+    .nav-logo img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
     }
 
     .nav-logo span {
@@ -1353,7 +1362,10 @@
   <div id="progress-bar" style="width:0%"></div>
 
   <nav>
-    <div class="nav-logo">☕ <span>Kopi</span> Indonesia</div>
+    <div class="nav-logo">
+      <img src="{% static 'story/assets/coffee.png' %}" alt="Coffee Icon">
+      <div><span>Kopi</span> Indonesia</div>
+    </div>
     <ul class="nav-links">
       <li><a href="#hero">Beranda</a></li>
       <li><a href="#prologue">Prolog</a></li>
@@ -1410,7 +1422,7 @@
     </div>
 
     <div class="hero-content" style="position:relative; z-index:2;">
-      <div class="hero-eyebrow">☕ Web Story — Data &amp; Fakta</div>
+      <div class="hero-eyebrow"> Web Story — Data &amp; Fakta</div>
       <h1 class="hero-title">Kopi<br><em>Indonesia</em></h1>
       <p class="hero-subtitle">Dari biji hingga cangkir — perjalanan kopi nusantara dalam angka &amp; cerita</p>
       <div class="hero-stats">
@@ -1766,6 +1778,12 @@
           <canvas id="eksporImporChart"></canvas>
         </div>
       </div>
+      <div class="reveal" style="max-width:800px;margin:0 auto 3rem;text-align:center;">
+        <p style="font-size:1.5rem;line-height:1.8;color:rgba(245,234,216,0.7);font-style:italic;">
+          Ratusan ribu ton kopi kita sukses melintasi benua. 
+          Inilah 5 negara yang paling bergantung pada asupan kafein Nusantara.
+        </p>
+    </div>
       <div class="top-negara reveal">
         <h3>🏆 Top 5 Negara Tujuan Ekspor Kopi Indonesia (2024)</h3>
         <div class="negara-bars" id="negara-bars"></div>
@@ -1775,7 +1793,6 @@
 
   <!-- ===== FOOTER ===== -->
   <footer>
-    <div class="footer-logo">☕</div>
     <p>KOPI INDONESIA — WEB STORY</p>
     <p style="margin-top:0.5rem;">Alisha, Farhan, Lady, Alfa, Ridho · Kelompok 7</p>
   </footer>
