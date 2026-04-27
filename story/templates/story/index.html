@@ -14,6 +14,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
   <style>
     :root {
       --espresso: #1a0a00;
@@ -75,11 +76,20 @@
     }
 
     .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       font-family: 'Playfair Display', serif;
       font-size: 1.4rem;
       font-weight: 900;
       letter-spacing: 0.05em;
       color: var(--gold);
+    }
+
+    .nav-logo img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
     }
 
     .nav-logo span {
@@ -1023,14 +1033,14 @@
 
     .negara-row {
       display: grid;
-      grid-template-columns: 100px 1fr 120px;
-      gap: 1rem;
+      grid-template-columns: 130px 1fr auto;
+      gap: 1.25rem;
       align-items: center;
     }
 
     .negara-name {
       font-family: 'Space Mono', monospace;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       letter-spacing: 0.05em;
     }
 
@@ -1050,9 +1060,10 @@
 
     .negara-val {
       font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      text-align: right;
-      color: rgba(245, 234, 216, 0.7);
+      font-size: 0.95rem;
+      font-weight: bold;
+      text-align: left;
+      color: var(--gold);
     }
 
     /* ======= FOOTER ======= */
@@ -1171,39 +1182,15 @@
       position: absolute;
       pointer-events: none;
       opacity: 0;
-      filter: drop-shadow(0 4px 15px rgba(212, 168, 75, 0.3));
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      /* Managed by Anime.js */
+      filter: drop-shadow(0 5px 15px rgba(212, 168, 75, 0.4));
       z-index: 0;
-    }
-
-    .deco-icon.visible {
-      opacity: 0.55;
     }
 
     .deco-icon img {
       width: 100%;
       height: auto;
       display: block;
-    }
-
-    @keyframes float-gentle {
-
-      0%,
-      100% {
-        transform: translateY(0px) rotate(var(--rot, 0deg));
-      }
-
-      50% {
-        transform: translateY(-12px) rotate(var(--rot, 0deg));
-      }
-    }
-
-    .deco-icon.floating {
-      animation: float-gentle 5s ease-in-out infinite;
-    }
-
-    .deco-icon.floating-slow {
-      animation: float-gentle 8s ease-in-out infinite;
     }
 
     /* Each section wrapper is relative so deco icons are positioned inside it */
@@ -1375,9 +1362,13 @@
   <div id="progress-bar" style="width:0%"></div>
 
   <nav>
-    <div class="nav-logo">☕ <span>Kopi</span> Indonesia</div>
+    <div class="nav-logo">
+      <img src="{% static 'story/assets/coffee.png' %}" alt="Coffee Icon">
+      <div><span>Kopi</span> Indonesia</div>
+    </div>
     <ul class="nav-links">
       <li><a href="#hero">Beranda</a></li>
+      <li><a href="#prologue">Prolog</a></li>
       <li><a href="#beans">Jenis</a></li>
       <li><a href="#map-section">Sebaran</a></li>
       <li><a href="#trend">Tren</a></li>
@@ -1408,8 +1399,30 @@
         <div class="coffee-drip" style="left:92%;--drip-dur:2.9s;--drip-delay:0.3s"></div>
       </div>
     </div>
-    <div class="hero-content">
-      <div class="hero-eyebrow">☕ Web Story — Data &amp; Fakta</div>
+    <!-- Hero Deco Icons (Animated via Anime.js on load) -->
+    <div class="hero-deco"
+      style="position:absolute; width:150px; top:15%; left:6%; opacity:0; z-index:0; --rot:10deg; filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));">
+      <img src="{% static 'story/assets/7.webp' %}" alt="">
+    </div>
+    <div class="hero-deco"
+      style="position:absolute; width:120px; top:65%; left:8%; opacity:0; z-index:0; --rot:-15deg;">
+      <img src="{% static 'story/assets/4.webp' %}" alt="">
+    </div>
+    <div class="hero-deco"
+      style="position:absolute; width:180px; top:10%; right:12%; opacity:0; z-index:0; --rot:25deg; filter:blur(1px);">
+      <img src="{% static 'story/assets/11.webp' %}" alt="">
+    </div>
+    <div class="hero-deco"
+      style="position:absolute; width:130px; top:55%; right:8%; opacity:0; z-index:0; --rot:-20deg;">
+      <img src="{% static 'story/assets/10.webp' %}" alt="">
+    </div>
+    <div class="hero-deco"
+      style="position:absolute; width:100px; top:75%; right:25%; opacity:0; z-index:0; filter:blur(3px); --rot:-8deg;">
+      <img src="{% static 'story/assets/9.webp' %}" alt="">
+    </div>
+
+    <div class="hero-content" style="position:relative; z-index:2;">
+      <div class="hero-eyebrow"> Web Story — Data &amp; Fakta</div>
       <h1 class="hero-title">Kopi<br><em>Indonesia</em></h1>
       <p class="hero-subtitle">Dari biji hingga cangkir — perjalanan kopi nusantara dalam angka &amp; cerita</p>
       <div class="hero-stats">
@@ -1431,14 +1444,58 @@
         </div>
       </div>
     </div>
-    <div class="scroll-hint">
-      <span>Scroll</span>
-      <div class="scroll-arrow"></div>
+  </section>
+
+  <!-- Transition: hero → prologue -->
+  <div class="section-transition" style="background:linear-gradient(to bottom, #1a0a00, #2d1200)"></div>
+
+  <!-- ===== PROLOGUE ===== -->
+  <section id="prologue"
+    style="background: #2d1200; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem;">
+    <!-- Deco Icons for Prologue -->
+    <div class="deco-icon floating-slow"
+      style="width: 140px; top: 15%; left: 8%; --rot: -15deg; opacity: 0; z-index: 1;">
+      <img src="{% static 'story/assets/8.webp' %}" alt="">
+    </div>
+    <div class="deco-icon floating"
+      style="width: 110px; bottom: 20%; right: 10%; --rot: 20deg; opacity: 0; z-index: 1;">
+      <img src="{% static 'story/assets/12.webp' %}" alt="">
+    </div>
+
+    <div class="reveal" style="max-width: 800px; z-index: 2; position: relative;">
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); margin-bottom: 1.5rem;">
+        Mengapa Kopi?</h2>
+      <p style="font-size: 1.25rem; line-height: 1.8; color: var(--cream); margin-bottom: 3rem;">
+        Kopi bukan sekadar komoditas pendorong ekonomi. Ia adalah identitas, bagian dari budaya luhur, serta saksi bisu
+        sejarah dan keseharian jutaan keluarga di Nusantara.
+      </p>
+
+      <div
+        style="background: rgba(26,10,0,0.6); border: 1px solid rgba(212,168,75,0.4); border-radius: 16px; padding: 3rem 2rem; box-shadow: 0 15px 40px rgba(0,0,0,0.6); backdrop-filter: blur(5px);">
+        <h3
+          style="font-family: 'Space Mono', monospace; font-size: 1.1rem; color: rgba(245,234,216,0.8); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem;">
+          Fakta Membanggakan</h3>
+        <p style="font-size: 1.2rem; line-height: 1.6; color: var(--cream);">
+          Saat ini, Indonesia kokoh berdiri sebagai
+        </p>
+        <div
+          style="font-family: 'Playfair Display', serif; font-size: 5rem; font-weight: 900; color: var(--gold); margin: 1rem 0; text-shadow: 0 5px 25px rgba(212, 168, 75, 0.5);">
+          #4
+        </div>
+        <p
+          style="font-family: 'Playfair Display', serif; font-size: 1.8rem; line-height: 1.4; color: var(--gold); font-weight: 700; margin-bottom: 1.5rem;">
+          Produsen Kopi Terbesar di Dunia
+        </p>
+        <p style="font-size: 1.05rem; line-height: 1.7; color: rgba(245,234,216,0.8);">
+          Menyumbang lebih dari 7% total produksi kopi global, mendampingi raksasa produsen lainnya seperti Brasil,
+          Vietnam, dan Kolombia dalam memenuhi dahaga para pencinta kopi di seluruh penjuru bumi.
+        </p>
+      </div>
     </div>
   </section>
 
-  <!-- Transition: hero → beans -->
-  <div class="section-transition" style="background:linear-gradient(to bottom, #1a0a00, #2d1200)"></div>
+  <!-- Transition: prologue → beans -->
+  <div class="section-transition" style="background:linear-gradient(to bottom, #2d1200, #1a0a00)"></div>
 
   <!-- ===== ARABICA VS ROBUSTA ===== -->
   <section id="beans">
@@ -1631,7 +1688,7 @@
       </div>
 
       <div class="chart-box reveal">
-        <h3>📈 Jumlah Gerai Kopi (ribu gerai)</h3>
+        <h3>Jumlah Gerai Kopi (ribu gerai)</h3>
         <div class="chart-wrap">
           <canvas id="geraiChart"></canvas>
         </div>
@@ -1721,6 +1778,12 @@
           <canvas id="eksporImporChart"></canvas>
         </div>
       </div>
+      <div class="reveal" style="max-width:800px;margin:0 auto 3rem;text-align:center;">
+        <p style="font-size:1.5rem;line-height:1.8;color:rgba(245,234,216,0.7);font-style:italic;">
+          Ratusan ribu ton kopi kita sukses melintasi benua. 
+          Inilah 5 negara yang paling bergantung pada asupan kafein Nusantara.
+        </p>
+    </div>
       <div class="top-negara reveal">
         <h3>🏆 Top 5 Negara Tujuan Ekspor Kopi Indonesia (2024)</h3>
         <div class="negara-bars" id="negara-bars"></div>
@@ -1730,9 +1793,8 @@
 
   <!-- ===== FOOTER ===== -->
   <footer>
-    <div class="footer-logo">☕</div>
     <p>KOPI INDONESIA — WEB STORY</p>
-    <p style="margin-top:0.5rem;">Data: BPS, Ditjenbun, Kemendag · 2023–2025</p>
+    <p style="margin-top:0.5rem;">Alisha, Farhan, Lady, Alfa, Ridho · Kelompok 7</p>
   </footer>
 
   <script>
@@ -1761,16 +1823,88 @@
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // ===== DECO ICON SCROLL REVEAL =====
+    // ===== DECO ICON SCROLL REVEAL (ANIME.JS) =====
     const decoObserver = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          decoObserver.unobserve(e.target);
+          const el = e.target;
+          const initialRot = parseFloat(el.style.getPropertyValue('--rot')) || 0;
+
+          anime({
+            targets: el,
+            scale: [0.2, 1],
+            opacity: [0, 0.75],
+            translateY: [60, 0],
+            rotate: [initialRot - 40, initialRot],
+            duration: 2000,
+            delay: anime.random(50, 400),
+            easing: 'easeOutElastic(1, .5)',
+            complete: function () {
+              // Continuous Drifting/Floating Animation
+              anime({
+                targets: el,
+                translateY: () => anime.random(-25, 25),
+                translateX: () => anime.random(-15, 15),
+                rotate: () => [initialRot, initialRot + anime.random(-15, 15)],
+                duration: () => anime.random(4000, 7000),
+                easing: 'easeInOutSine',
+                direction: 'alternate',
+                loop: true
+              });
+            }
+          });
+
+          decoObserver.unobserve(el);
         }
       });
     }, { threshold: 0.05 });
     document.querySelectorAll('.deco-icon').forEach(el => decoObserver.observe(el));
+
+    // ===== HERO ANIMATION (ON LOAD) =====
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Text Entry Animation
+      anime({
+        targets: '.hero-eyebrow, .hero-title, .hero-subtitle, .hero-stat',
+        translateY: [40, 0],
+        opacity: [0, 1],
+        duration: 1500,
+        delay: anime.stagger(150, { start: 300 }),
+        easing: 'easeOutQuint'
+      });
+
+      // 2. Hero Deco Icons Explosive Entry
+      const heroDecos = document.querySelectorAll('.hero-deco');
+      if (heroDecos.length > 0) {
+        anime.timeline()
+          .add({
+            targets: '.hero-deco',
+            scale: [0, 1],
+            opacity: [0, 0.85],
+            translateY: [() => anime.random(100, 200), 0],
+            translateX: [() => anime.random(-80, 80), 0],
+            rotate: [() => anime.random(-90, 90), (el) => parseFloat(el.style.getPropertyValue('--rot')) || 0],
+            duration: 2800,
+            delay: anime.stagger(150, { start: 600 }),
+            easing: 'easeOutElastic(1, .6)',
+            complete: function () {
+              // 3. Continuous Drifting Infinity Loop
+              anime({
+                targets: '.hero-deco',
+                translateY: () => anime.random(-40, 40),
+                translateX: () => anime.random(-30, 30),
+                rotate: function (el) {
+                  let r = parseFloat(el.style.getPropertyValue('--rot')) || 0;
+                  return [r, r + anime.random(-25, 25)];
+                },
+                duration: () => anime.random(5000, 9000),
+                easing: 'easeInOutSine',
+                direction: 'alternate',
+                loop: true
+              });
+            }
+          });
+      }
+    });
 
     // ===== BEAN DETAIL PANELS =====
     const listArabica = document.getElementById('list-arabica');
@@ -2088,7 +2222,13 @@
     });
 
     // ===== NEGARA BARS =====
-    const COUNTRY_FLAGS = { 'USA': '🇺🇸', 'Egypt': '🇪🇬', 'Malaysia': '🇲🇾', 'Belgium': '🇧🇪', 'Russia': '🇷🇺' };
+    const COUNTRY_FLAGS = {
+      'USA': `<img src="{% static 'story/flags/united-states.png' %}" style="width:24px; height:auto; vertical-align:middle; margin-right:8px; border-radius:2px; box-shadow:0 0 5px rgba(0,0,0,0.5);">`,
+      'Egypt': `<img src="{% static 'story/flags/Egypt.png' %}" style="width:24px; height:auto; vertical-align:middle; margin-right:8px; border-radius:2px; box-shadow:0 0 5px rgba(0,0,0,0.5);">`,
+      'Malaysia': `<img src="{% static 'story/flags/Malaysia.png' %}" style="width:24px; height:auto; vertical-align:middle; margin-right:8px; border-radius:2px; box-shadow:0 0 5px rgba(0,0,0,0.5);">`,
+      'Belgium': `<img src="{% static 'story/flags/belgium.png' %}" style="width:24px; height:auto; vertical-align:middle; margin-right:8px; border-radius:2px; box-shadow:0 0 5px rgba(0,0,0,0.5);">`,
+      'Russia': `<img src="{% static 'story/flags/rusia.png' %}" style="width:24px; height:auto; vertical-align:middle; margin-right:8px; border-radius:2px; box-shadow:0 0 5px rgba(0,0,0,0.5);">`
+    };
     const maxNilai = Math.max(...TOP_NEGARA.map(n => n.nilai));
     const negaraBars = document.getElementById('negara-bars');
     TOP_NEGARA.forEach(n => {
@@ -2097,7 +2237,7 @@
       const row = document.createElement('div');
       row.className = 'negara-row';
       row.innerHTML = `
-    <div class="negara-name">${flag} ${n.negara}</div>
+    <div class="negara-name" style="display:flex; align-items:center;">${flag} <span style="margin-left:5px;">${n.negara}</span></div>
     <div class="negara-bar-wrap">
       <div class="negara-bar" style="width:0%" data-width="${pct}%"></div>
     </div>
