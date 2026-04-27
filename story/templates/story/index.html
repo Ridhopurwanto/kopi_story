@@ -1,0 +1,1958 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kopi Indonesia — Web Story</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --espresso: #1a0a00;
+      --dark-roast: #2d1200;
+      --medium-roast: #6b3a1f;
+      --light-roast: #c47e3a;
+      --cream: #f5ead8;
+      --foam: #fdf6ec;
+      --gold: #d4a84b;
+      --green-leaf: #3d6e3a;
+      --arabica-col: #8b5e3c;
+      --robusta-col: #1c1c1c;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--espresso);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', 'Lora', serif;
+      font-size: 17px;
+      overflow-x: hidden;
+    }
+
+    /* ======= PROGRESS BAR ======= */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--light-roast));
+      z-index: 1000;
+      transition: width 0.1s;
+    }
+
+    /* ======= NAV ======= */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 900;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: linear-gradient(to bottom, rgba(26, 10, 0, 0.95), transparent);
+      backdrop-filter: blur(4px);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: var(--gold);
+    }
+
+    .nav-logo span {
+      color: var(--cream);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s, color 0.2s;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+      color: var(--gold);
+    }
+
+    /* ======= SECTIONS ======= */
+    section {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ======= HERO ======= */
+    #hero {
+      background: radial-gradient(ellipse at 30% 50%, #3d1a00 0%, #1a0a00 60%, #000 100%);
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .coffee-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(212, 168, 75, 0.15);
+      animation: pulse-ring 4s ease-in-out infinite;
+    }
+
+    .coffee-ring:nth-child(1) {
+      width: 300px;
+      height: 300px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 0s;
+    }
+
+    .coffee-ring:nth-child(2) {
+      width: 500px;
+      height: 500px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 0.8s;
+    }
+
+    .coffee-ring:nth-child(3) {
+      width: 700px;
+      height: 700px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 1.6s;
+    }
+
+    .coffee-ring:nth-child(4) {
+      width: 900px;
+      height: 900px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 2.4s;
+    }
+
+    @keyframes pulse-ring {
+
+      0%,
+      100% {
+        opacity: 0.15;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      50% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1.02);
+      }
+    }
+
+    .steam {
+      position: absolute;
+      bottom: 45%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+    }
+
+    .steam-line {
+      width: 3px;
+      height: 60px;
+      background: linear-gradient(to top, rgba(245, 234, 216, 0.6), transparent);
+      border-radius: 2px;
+      animation: steam-rise 2s ease-in-out infinite;
+    }
+
+    .steam-line:nth-child(2) {
+      height: 80px;
+      animation-delay: 0.3s;
+    }
+
+    .steam-line:nth-child(3) {
+      height: 50px;
+      animation-delay: 0.6s;
+    }
+
+    @keyframes steam-rise {
+      0% {
+        transform: translateY(0) scaleX(1);
+        opacity: 0.7;
+      }
+
+      100% {
+        transform: translateY(-80px) scaleX(1.5);
+        opacity: 0;
+      }
+    }
+
+    .cup-icon {
+      font-size: 5rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      padding: 2rem;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.3s forwards;
+    }
+
+    h1.hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.5s forwards;
+    }
+
+    h1.hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-subtitle {
+      font-family: 'Lora', serif;
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      font-style: italic;
+      color: rgba(245, 234, 216, 0.75);
+      max-width: 500px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.7s forwards;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.9s forwards;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat .num {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .hero-stat .label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(245, 234, 216, 0.6);
+      margin-top: 0.3rem;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0.5;
+      animation: fadeIn 1s 1.5s forwards, bounce 2s 2s infinite;
+    }
+
+    .scroll-hint span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .scroll-arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 2px solid var(--cream);
+      border-bottom: 2px solid var(--cream);
+      transform: rotate(45deg);
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      50% {
+        transform: translateX(-50%) translateY(6px);
+      }
+    }
+
+    /* ======= SECTION HEADERS ======= */
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .section-subtitle {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      color: rgba(245, 234, 216, 0.65);
+      margin-top: 0.75rem;
+      font-size: 1rem;
+    }
+
+    /* ======= SECTION 2: ARABICA vs ROBUSTA ======= */
+    #beans {
+      background: var(--dark-roast);
+      padding: 6rem 2rem;
+    }
+
+    .beans-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .beans-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      align-items: start;
+    }
+
+    .bean-card {
+      padding: 2.5rem;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bean-detail-panel {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, margin 0.4s ease;
+      margin-top: 0;
+    }
+
+    .bean-detail-panel.detail-visible {
+      max-height: 500px;
+      opacity: 1;
+      margin-top: 1.5rem;
+    }
+
+    .bean-detail-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .bean-detail-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .bean-detail-list li:last-child {
+      border-bottom: none;
+    }
+
+    .bean-detail-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(245, 234, 216, 0.45);
+      flex-shrink: 0;
+      width: 90px;
+    }
+
+    .bean-detail-value {
+      text-align: right;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      color: rgba(245, 234, 216, 0.85);
+    }
+
+    .arabica .bean-detail-value {
+      color: var(--light-roast);
+    }
+
+    .robusta .bean-detail-value {
+      color: #ccc;
+    }
+
+    .bean-click-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.5;
+      margin-top: 1.2rem;
+      display: block;
+      text-align: center;
+      animation: pulse-hint 2s ease-in-out infinite;
+    }
+
+    .bean-card.arabica {
+      background: linear-gradient(135deg, #4a2409 0%, #2d1200 100%);
+      border: 1px solid rgba(196, 126, 58, 0.3);
+    }
+
+    .bean-card.robusta {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .bean-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 0.3rem;
+    }
+
+    .arabica .bean-label {
+      color: var(--light-roast);
+    }
+
+    .robusta .bean-label {
+      color: #aaa;
+    }
+
+    .bean-tagline {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: rgba(245, 234, 216, 0.5);
+      margin-bottom: 1.5rem;
+    }
+
+    .bean-emoji {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .vs-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .vs-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      font-style: italic;
+      color: var(--gold);
+      writing-mode: vertical-rl;
+      letter-spacing: 0.2em;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+
+    .comparison-table th {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.75rem 1rem;
+      color: var(--gold);
+      text-align: left;
+    }
+
+    .comparison-table td {
+      padding: 0.9rem 1rem;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .comparison-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .col-kategori {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      color: rgba(245, 234, 216, 0.5);
+      width: 18%;
+      text-transform: uppercase;
+    }
+
+    .col-arabica {
+      color: var(--light-roast);
+      width: 41%;
+    }
+
+    .col-robusta {
+      color: #bbb;
+      width: 41%;
+    }
+
+    /* ======= SECTION 3: MAP ======= */
+    #map-section {
+      background: #0d0600;
+      padding: 6rem 2rem;
+    }
+
+    .map-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    #indonesia-map {
+      width: 100%;
+      height: 600px;
+      border-radius: 16px;
+      border: 1px solid rgba(212, 168, 75, 0.2);
+      background: #1a0a00;
+      margin-bottom: 2rem;
+    }
+
+    .map-legend {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+    }
+
+    .legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .map-layout {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1000px) {
+      .map-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .map-top-table {
+      width: 100%;
+      margin: 0;
+      background: rgba(45, 18, 0, 0.6);
+      border: 1px solid rgba(212, 168, 75, 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .map-top-table h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(212, 168, 75, 0.15);
+      color: var(--gold);
+    }
+
+    .province-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 100px 70px;
+      gap: 1rem;
+      padding: 0.7rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+
+    .province-row:hover {
+      background: rgba(212, 168, 75, 0.05);
+    }
+
+    .province-row.header {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(245, 234, 216, 0.4);
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .prod-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .prod-bar {
+      height: 6px;
+      background: linear-gradient(90deg, var(--gold), var(--light-roast));
+      border-radius: 3px;
+      min-width: 2px;
+    }
+
+    /* ======= SECTION 4: GERAI / TREND ======= */
+    #trend {
+      background: linear-gradient(180deg, #0d0600 0%, #1a0800 100%);
+      padding: 6rem 2rem;
+    }
+
+    .trend-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .chart-box {
+      background: rgba(45, 18, 0, 0.5);
+      border: 1px solid rgba(212, 168, 75, 0.2);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .chart-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 400px;
+    }
+
+    /* ======= SECTION 5: EKSPOR IMPOR ======= */
+    #ekspor {
+      background: var(--espresso);
+      padding: 6rem 2rem;
+    }
+
+    .ekspor-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .trade-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .trade-card {
+      background: rgba(45, 18, 0, 0.7);
+      border: 1px solid rgba(212, 168, 75, 0.15);
+      border-radius: 12px;
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trade-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .trade-card.ekspor::before {
+      background: linear-gradient(90deg, var(--gold), var(--light-roast));
+    }
+
+    .trade-card.impor::before {
+      background: linear-gradient(90deg, #5a8a5a, #3d6e3a);
+    }
+
+    .trade-year {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: rgba(245, 234, 216, 0.4);
+      margin-bottom: 0.5rem;
+    }
+
+    .trade-type {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .ekspor .trade-type {
+      color: var(--gold);
+    }
+
+    .impor .trade-type {
+      color: #7ab87a;
+    }
+
+    .trade-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+
+    .trade-unit {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: rgba(245, 234, 216, 0.5);
+      letter-spacing: 0.1em;
+    }
+
+    .trade-change {
+      margin-top: 0.75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: #7ab87a;
+    }
+
+    /* ======= CARGO SHIP CHART ======= */
+    .ship-chart-container {
+      background: rgba(45, 18, 0, 0.5);
+      border: 1px solid rgba(212, 168, 75, 0.2);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cargo-ship-chart {
+      position: relative;
+      width: 100%;
+      height: 350px;
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .cargo-stacks {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      height: 250px;
+      align-items: flex-end;
+      z-index: 2;
+      padding-bottom: 5px;
+    }
+
+    .cargo-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 80px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .cargo-label-top {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .cargo-label-bottom {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(245, 234, 216, 0.8);
+      margin-top: 0.5rem;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .cargo-box-wrapper {
+      width: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      transition: height 1s ease;
+    }
+
+    .cargo-box {
+      width: 100%;
+      height: 100%;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      position: relative;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .ship-hull {
+      position: absolute;
+      bottom: 0;
+      left: 10%;
+      right: 10%;
+      height: 60px;
+      display: flex;
+      z-index: 1;
+    }
+
+    .ship-bow {
+      width: 80px;
+      height: 100%;
+      background: linear-gradient(135deg, transparent 50%, #8b2b2b 50%);
+    }
+
+    .ship-body {
+      flex-grow: 1;
+      height: 100%;
+      background: #8b2b2b;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .ship-body span {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 0.3);
+      letter-spacing: 5px;
+    }
+
+    .ship-stern {
+      width: 100px;
+      height: 100%;
+      background: #5c1b1b;
+      position: relative;
+    }
+
+    .ship-cabin {
+      position: absolute;
+      bottom: 100%;
+      right: 10px;
+      width: 60px;
+      height: 50px;
+      background: #e6e6e6;
+      border: 2px solid #333;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .ship-cabin::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 5px;
+      right: 5px;
+      height: 15px;
+      background: #8cf;
+      border: 2px solid #555;
+    }
+
+    .waves {
+      position: absolute;
+      bottom: -10px;
+      left: -10%;
+      width: 120%;
+      height: 20px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><path d="M0,10 Q25,20 50,10 T100,10 L100,20 L0,20 Z" fill="%231a3a4c"/></svg>');
+      background-size: 100px 20px;
+      animation: wave-move 3s linear infinite;
+      z-index: 5;
+    }
+
+    @keyframes wave-move {
+      0% {
+        background-position-x: 0;
+      }
+
+      100% {
+        background-position-x: 100px;
+      }
+    }
+
+    /* TOP NEGARA */
+    .top-negara {
+      background: rgba(45, 18, 0, 0.5);
+      border: 1px solid rgba(212, 168, 75, 0.15);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .top-negara h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .negara-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .negara-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 120px;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .negara-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .negara-bar-wrap {
+      height: 28px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .negara-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--medium-roast));
+      border-radius: 4px;
+      transition: width 1s ease;
+    }
+
+    .negara-val {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      text-align: right;
+      color: rgba(245, 234, 216, 0.7);
+    }
+
+    /* ======= FOOTER ======= */
+    footer {
+      background: #000;
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(212, 168, 75, 0.15);
+    }
+
+    footer .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    footer p {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: rgba(245, 234, 216, 0.3);
+      letter-spacing: 0.1em;
+    }
+
+    /* ======= ANIMATIONS ======= */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 0.5;
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ======= COMPARISON TABLE TOGGLE ======= */
+    .comparison-wrapper {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+    }
+
+    .comparison-wrapper.table-visible {
+      max-height: 600px;
+      opacity: 1;
+    }
+
+    .bean-card {
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .bean-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .click-hint {
+      text-align: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      opacity: 0.6;
+      margin-top: 1.5rem;
+      animation: pulse-hint 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-hint {
+
+      0%,
+      100% {
+        opacity: 0.4
+      }
+
+      50% {
+        opacity: 0.8
+      }
+    }
+
+    /* ======= SECTION TRANSITIONS ======= */
+    .section-transition {
+      height: 160px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ======= FLOATING COFFEE BEANS ======= */
+    .coffee-beans-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .floating-bean {
+      position: absolute;
+      font-size: var(--bean-size, 1.2rem);
+      opacity: 0;
+      animation: float-bean var(--duration, 12s) var(--delay, 0s) linear infinite;
+      left: var(--x, 50%);
+    }
+
+    @keyframes float-bean {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 0.15;
+      }
+
+      90% {
+        opacity: 0.15;
+      }
+
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* ======= COFFEE DRIP (HERO) ======= */
+    .coffee-drip-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .coffee-drip {
+      position: absolute;
+      top: -20px;
+      width: 2px;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, rgba(196, 126, 58, 0.4), transparent);
+      border-radius: 2px;
+      animation: drip var(--drip-dur, 3s) var(--drip-delay, 0s) ease-in infinite;
+    }
+
+    @keyframes drip {
+      0% {
+        transform: translateY(-40px);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 0.6;
+      }
+
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
+    /* ======= MAP CHOROPLETH ======= */
+    .map-info-box {
+      padding: 8px 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      background: rgba(26, 10, 0, 0.92);
+      border: 1px solid rgba(212, 168, 75, 0.3);
+      border-radius: 8px;
+      color: var(--cream);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      line-height: 1.8;
+    }
+
+    .map-info-box strong {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.9rem;
+      color: var(--gold);
+    }
+
+    .leaflet-popup-content-wrapper {
+      background: rgba(26, 10, 0, 0.95) !important;
+      border: 1px solid rgba(212, 168, 75, 0.3) !important;
+      border-radius: 10px !important;
+      color: var(--cream) !important;
+    }
+
+    .leaflet-popup-tip {
+      background: rgba(26, 10, 0, 0.95) !important;
+    }
+
+    /* ======= RESPONSIVE ======= */
+    @media (max-width: 768px) {
+      .beans-split {
+        grid-template-columns: 1fr;
+      }
+
+      .vs-divider {
+        display: none;
+      }
+
+      .province-row {
+        grid-template-columns: 1fr 1fr;
+        font-size: 0.8rem;
+      }
+
+      .province-row .prod-bar-wrap {
+        display: none;
+      }
+
+      .negara-row {
+        grid-template-columns: 80px 1fr 80px;
+      }
+
+      nav {
+        padding: 0.75rem 1rem;
+      }
+
+      .nav-links {
+        gap: 0.75rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Floating coffee beans background -->
+  <div class="coffee-beans-bg">
+    <div class="floating-bean" style="--x:5%;--duration:14s;--delay:0s;--bean-size:1rem">☕</div>
+    <div class="floating-bean" style="--x:15%;--duration:18s;--delay:2s;--bean-size:0.8rem">🫘</div>
+    <div class="floating-bean" style="--x:25%;--duration:12s;--delay:5s;--bean-size:1.3rem">☕</div>
+    <div class="floating-bean" style="--x:40%;--duration:20s;--delay:1s;--bean-size:0.9rem">🫘</div>
+    <div class="floating-bean" style="--x:55%;--duration:15s;--delay:7s;--bean-size:1.1rem">☕</div>
+    <div class="floating-bean" style="--x:65%;--duration:17s;--delay:3s;--bean-size:0.7rem">🫘</div>
+    <div class="floating-bean" style="--x:78%;--duration:13s;--delay:9s;--bean-size:1.2rem">☕</div>
+    <div class="floating-bean" style="--x:88%;--duration:16s;--delay:4s;--bean-size:0.85rem">🫘</div>
+    <div class="floating-bean" style="--x:95%;--duration:19s;--delay:6s;--bean-size:1rem">☕</div>
+    <div class="floating-bean" style="--x:50%;--duration:22s;--delay:10s;--bean-size:1.4rem">🫘</div>
+  </div>
+
+  <div id="progress-bar" style="width:0%"></div>
+
+  <nav>
+    <div class="nav-logo">☕ <span>Kopi</span> Indonesia</div>
+    <ul class="nav-links">
+      <li><a href="#hero">Beranda</a></li>
+      <li><a href="#beans">Jenis</a></li>
+      <li><a href="#map-section">Sebaran</a></li>
+      <li><a href="#trend">Tren</a></li>
+      <li><a href="#ekspor">Ekspor</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero">
+    <div class="hero-bg">
+      <div class="coffee-ring"></div>
+      <div class="coffee-ring"></div>
+      <div class="coffee-ring"></div>
+      <div class="coffee-ring"></div>
+      <div class="steam">
+        <div class="steam-line"></div>
+        <div class="steam-line"></div>
+        <div class="steam-line"></div>
+      </div>
+      <!-- Coffee drip effect -->
+      <div class="coffee-drip-container">
+        <div class="coffee-drip" style="left:10%;--drip-dur:2.5s;--drip-delay:0s"></div>
+        <div class="coffee-drip" style="left:20%;--drip-dur:3.2s;--drip-delay:1.2s"></div>
+        <div class="coffee-drip" style="left:35%;--drip-dur:2.8s;--drip-delay:0.5s"></div>
+        <div class="coffee-drip" style="left:50%;--drip-dur:3.5s;--drip-delay:2s"></div>
+        <div class="coffee-drip" style="left:65%;--drip-dur:2.6s;--drip-delay:0.8s"></div>
+        <div class="coffee-drip" style="left:80%;--drip-dur:3s;--drip-delay:1.5s"></div>
+        <div class="coffee-drip" style="left:92%;--drip-dur:2.9s;--drip-delay:0.3s"></div>
+      </div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">☕ Web Story — Data &amp; Fakta</div>
+      <h1 class="hero-title">Kopi<br><em>Indonesia</em></h1>
+      <p class="hero-subtitle">Dari biji hingga cangkir — perjalanan kopi nusantara dalam angka &amp; cerita</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="num">1,2 Jt</span>
+          <span class="label">Ha Lahan Kopi</span>
+        </div>
+        <div class="hero-stat">
+          <span class="num">774 Rb</span>
+          <span class="label">Ton Produksi</span>
+        </div>
+        <div class="hero-stat">
+          <span class="num">11,5 Rb</span>
+          <span class="label">Gerai Kafe 2025</span>
+        </div>
+        <div class="hero-stat">
+          <span class="num">$1,6 M</span>
+          <span class="label">Nilai Ekspor 2024</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- Transition: hero → beans -->
+  <div class="section-transition" style="background:linear-gradient(to bottom, #1a0a00, #2d1200)"></div>
+
+  <!-- ===== ARABICA VS ROBUSTA ===== -->
+  <section id="beans">
+    <div class="beans-container">
+      <div class="section-header reveal">
+        <span class="section-tag">Chapter 01 — Identitas Biji</span>
+        <h2 class="section-title">Arabika <em>vs</em> Robusta</h2>
+        <p class="section-subtitle">Dua karakter berbeda, satu cinta yang sama: kopi</p>
+      </div>
+
+      <div class="beans-split reveal">
+        <div class="bean-card arabica" id="card-arabica">
+          <span class="bean-emoji">🫘</span>
+          <div class="bean-label">Arabika</div>
+          <div class="bean-tagline">"Si elegan dari ketinggian"</div>
+          <p style="font-size:0.95rem; color:rgba(245,234,216,0.7); line-height:1.7;">
+            Tumbuh di ketinggian 1.000–2.100 mdpl, arabika dikenal dengan cita rasa kompleks,
+            keasaman yang menyegarkan, dan aroma bunga yang memikat.
+          </p>
+          <span class="bean-click-label">▼ klik untuk detail</span>
+          <div class="bean-detail-panel" id="detail-arabica">
+            <ul class="bean-detail-list" id="list-arabica"></ul>
+          </div>
+        </div>
+        <div class="bean-card robusta" id="card-robusta">
+          <span class="bean-emoji">☕</span>
+          <div class="bean-label">Robusta</div>
+          <div class="bean-tagline">"Si tangguh dari dataran rendah"</div>
+          <p style="font-size:0.95rem; color:rgba(245,234,216,0.7); line-height:1.7;">
+            Tumbuh di bawah 800 mdpl, robusta lebih tahan hama dan cuaca. Kafein
+            hampir dua kali lipat arabika, rasa pahit yang kuat dan bodi tebal.
+          </p>
+          <span class="bean-click-label">▼ klik untuk detail</span>
+          <div class="bean-detail-panel" id="detail-robusta">
+            <ul class="bean-detail-list" id="list-robusta"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition: beans → map -->
+  <div class="section-transition" style="background:linear-gradient(to bottom, #2d1200, #0d0600)"></div>
+
+  <!-- ===== MAP ===== -->
+  <section id="map-section">
+    <div class="map-container">
+      <div class="section-header reveal">
+        <span class="section-tag">Chapter 02 — Sebaran Wilayah</span>
+        <h2 class="section-title">Peta <em>Perkebunan</em> Kopi</h2>
+        <p class="section-subtitle">Data pertanian kopi komprehensif di seluruh Indonesia</p>
+
+        <div style="max-width:800px; margin: 1.5rem auto 0; text-align:center;">
+          <p style="font-size:1rem;line-height:1.8;color:rgba(245,234,216,0.7);font-style:italic;">
+            📍 Dari visualisasi peta di bawah ini terlihat bahwa konsentrasi terbesar perkebunan kopi berada di
+            pulau Sumatera bagian selatan (Sumsel & Lampung). Hal ini menunjukkan letak geografis
+            tersebut sangat mendukung tingginya hasil produksi nasional.
+          </p>
+        </div>
+        <div style="margin-top: 1.5rem;">
+          <label
+            style="font-family:'Space Mono', monospace; font-size:0.75rem; color:var(--gold); margin-right:0.5rem;">UKURAN
+            DATA:</label>
+          <select id="map-metric-select"
+            style="background:rgba(45,18,0,0.8); border:1px solid var(--gold); color:#f5ead8; padding:0.4rem 0.8rem; font-family:'Space Mono', monospace; border-radius:4px; outline:none; cursor:pointer; font-size:0.8rem;">
+            <option value="produksi">Produksi (ton)</option>
+            <option value="luas">Luas Lahan (ha)</option>
+            <option value="produktivitas">Produktivitas (ton/ha)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="map-layout reveal">
+        <div class="map-visuals">
+          <div id="indonesia-map"></div>
+          <div class="map-legend" id="map-legend-container">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#7c2d12"></div> <span class="leg-0"></span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#c2410c"></div> <span class="leg-1"></span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#ea580c"></div> <span class="leg-2"></span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#f97316"></div> <span class="leg-3"></span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#fbbf24"></div> <span class="leg-4"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-top-table">
+          <h3>🏆 Top 10 Provinsi</h3>
+          <div class="province-row header">
+            <span>Provinsi</span>
+            <span>Produksi (ton)</span>
+            <span>Luas (ha)</span>
+            <span>Prdkt.</span>
+          </div>
+          <div id="province-list"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition: map → trend -->
+  <div class="section-transition" style="background:linear-gradient(to bottom, #0d0600, #0d0600)"></div>
+
+  <!-- ===== TREND ===== -->
+  <section id="trend">
+    <div class="trend-container">
+      <div class="section-header reveal">
+        <span class="section-tag">Chapter 03 — Industri Kafe</span>
+        <h2 class="section-title">Booming <em>Gerai</em> Kopi</h2>
+        <p class="section-subtitle">Pertumbuhan gerai kopi Indonesia dari 2022–2025</p>
+
+        <div style="max-width:800px; margin: 1.5rem auto 0; text-align:center;">
+          <p style="font-size:1rem;line-height:1.8;color:rgba(245,234,216,0.7);font-style:italic;">
+            ☕ Pertumbuhan industri kopi kekinian (kedai kopi) melonjak pesat.
+            Hal ini menunjukkan perubahan budaya konsumsi gen Z dan milenial.
+            Dampaknya terhadap industri sangat besar: permintaan kopi roasting
+            lokal naik tajam, dan harga biji kopi perlahan lebih bernilai mati.
+          </p>
+        </div>
+      </div>
+
+      <div class="chart-box reveal">
+        <h3>📈 Jumlah Gerai Kopi (ribu gerai)</h3>
+        <div class="chart-wrap">
+          <canvas id="geraiChart"></canvas>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap:1.5rem;" class="reveal">
+        <div
+          style="background:rgba(45,18,0,0.7);border:1px solid rgba(212,168,75,0.15);border-radius:12px;padding:1.5rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold);">35%
+          </div>
+          <div
+            style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;color:rgba(245,234,216,0.5);margin-top:0.5rem;">
+            PERTUMBUHAN<br>2022–2025</div>
+        </div>
+        <div
+          style="background:rgba(45,18,0,0.7);border:1px solid rgba(212,168,75,0.15);border-radius:12px;padding:1.5rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold);">11,5 Rb
+          </div>
+          <div
+            style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;color:rgba(245,234,216,0.5);margin-top:0.5rem;">
+            GERAI KOPI<br>TAHUN 2025</div>
+        </div>
+        <div
+          style="background:rgba(45,18,0,0.7);border:1px solid rgba(212,168,75,0.15);border-radius:12px;padding:1.5rem;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold);">+1,5 Rb
+          </div>
+          <div
+            style="font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;color:rgba(245,234,216,0.5);margin-top:0.5rem;">
+            GERAI BARU<br>2024–2025</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition: trend → ekspor -->
+  <div class="section-transition" style="background:linear-gradient(to bottom, #1a0800, #1a0a00)"></div>
+
+  <!-- ===== EKSPOR IMPOR ===== -->
+  <section id="ekspor">
+    <div class="ekspor-container">
+      <div class="section-header reveal">
+        <span class="section-tag">Chapter 04 — Perdagangan Global</span>
+        <h2 class="section-title">Kopi Indonesia <em>Mendunia</em></h2>
+        <p class="section-subtitle">Dari kebun nusantara ke cangkir dunia — jejak ekspor kopi Indonesia</p>
+      </div>
+
+      <div class="reveal" style="max-width:800px;margin:0 auto 3rem;text-align:center;">
+        <p style="font-size:1rem;line-height:1.8;color:rgba(245,234,216,0.7);font-style:italic;">
+          🚢 Indonesia merupakan eksportir kopi terbesar keempat di dunia. Pada tahun 2024,
+          nilai ekspor kopi Indonesia melonjak hingga <strong style="color:var(--gold)">US$ 1,6 miliar</strong> —
+          meningkat <strong style="color:var(--gold)">76%</strong> dari tahun sebelumnya.
+          Kopi Indonesia kini menjangkau lebih dari 60 negara, dengan Amerika Serikat,
+          Mesir, dan Malaysia sebagai tiga pasar utama.
+        </p>
+      </div>
+
+      <div class="trade-cards reveal" id="trade-cards"></div>
+
+      <div class="chart-box reveal" style="margin-bottom:2rem;">
+      <div class="ship-chart-container reveal">
+        <h3 style="font-family:'Playfair Display', serif; color:var(--gold); margin-bottom:1rem; text-align:center;">🚢 Muatan Ekspor vs Impor Kopi (Ton)</h3>
+        <p style="text-align:center; font-size:0.85rem; color:rgba(245,234,216,0.6); margin-bottom:3rem;">Tinggi tumpukan kontainer mewakili volume perdagangan kopi (2023-2024)</p>
+        
+        <div class="cargo-ship-chart" id="cargo-ship-chart">
+          <!-- Ship Hull (Bottom) -->
+          <div class="ship-hull">
+            <div class="ship-bow"></div>
+            <div class="ship-body">
+              <span>Nusantara Express</span>
+              <div class="waves"></div>
+            </div>
+            <div class="ship-stern">
+              <div class="ship-cabin"></div>
+            </div>
+          </div>
+          
+          <!-- Cargo Containers (Bars) -->
+          <div class="cargo-stacks" id="cargo-stacks">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <div style="max-width:800px; margin: 3rem auto 0; text-align:center;">
+          <p style="font-size:1rem;line-height:1.8;color:rgba(245,234,216,0.7);font-style:italic;">
+            👀 Dari muatan kapal di atas, terlihat jelas ketimpangan besar: 
+            Kopi yang kita ekspor melimpah ruah dibanding yang kita impor. Indonesia adalah pemain raksasa 
+            dalam suplai kopi dunia, bukan konsumen produk asing.
+          </p>
+        </div>
+      </div>
+      <div class="top-negara reveal">
+        <h3>� Top 5 Negara Tujuan Ekspor Kopi Indonesia (2024)</h3>
+        <div class="negara-bars" id="negara-bars"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="footer-logo">☕</div>
+    <p>KOPI INDONESIA — WEB STORY</p>
+    <p style="margin-top:0.5rem;">Data: BPS, Ditjenbun, Kemendag · 2023–2025</p>
+  </footer>
+
+  <script>
+    // ===== DATA FROM DJANGO =====
+    const ARABICA_ROBUSTA = {{ arabica_robusta| safe }};
+    const GERAI_KOPI = {{ gerai_kopi| safe }};
+    const EKSPOR_IMPOR = {{ ekspor_impor| safe }};
+    const TOP_NEGARA = {{ top_negara| safe }};
+    const PROVINSI_DATA = {{ provinsi_data| safe }};
+
+    // ===== PROGRESS BAR =====
+    window.addEventListener('scroll', () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = (window.scrollY / total) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+    });
+
+    // ===== REVEAL ANIMATION =====
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 100);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ===== BEAN DETAIL PANELS =====
+    const listArabica = document.getElementById('list-arabica');
+    const listRobusta = document.getElementById('list-robusta');
+    ARABICA_ROBUSTA.forEach(row => {
+      listArabica.innerHTML += `<li><span class="bean-detail-label">${row.kategori}</span><span class="bean-detail-value">${row.arabica}</span></li>`;
+      listRobusta.innerHTML += `<li><span class="bean-detail-label">${row.kategori}</span><span class="bean-detail-value">${row.robusta}</span></li>`;
+    });
+
+    // Per-card click toggle
+    document.getElementById('card-arabica').addEventListener('click', () => {
+      document.getElementById('detail-arabica').classList.toggle('detail-visible');
+    });
+    document.getElementById('card-robusta').addEventListener('click', () => {
+      document.getElementById('detail-robusta').classList.toggle('detail-visible');
+    });
+
+    // ===== MAP =====
+    const map = L.map('indonesia-map', {
+      center: [-2.5, 118],
+      zoom: 5,
+      zoomControl: true,
+      scrollWheelZoom: false,
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '©OpenStreetMap ©CartoDB',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    // GeoJSON province name -> data province name aliases
+    const PROV_ALIAS = {
+      'Daerah Istimewa Yogyakarta': 'DI Yogyakarta',
+      'Kepulauan Bangka Belitung': 'Bangka Belitung',
+    };
+
+    const provLookup = {};
+    PROVINSI_DATA.forEach(d => { provLookup[d.provinsi] = d; });
+
+    function getProvData(geoName) {
+      const name = PROV_ALIAS[geoName] || geoName;
+      return provLookup[name] || null;
+    }
+
+    function getColor(val, metric) {
+      if (metric === 'luas') {
+        if (val >= 200000) return '#fbbf24';
+        if (val >= 100000) return '#f97316';
+        if (val >= 50000) return '#ea580c';
+        if (val >= 10000) return '#c2410c';
+        return '#7c2d12';
+      } else if (metric === 'produksi') {
+        if (val >= 100000) return '#fbbf24';
+        if (val >= 50000) return '#f97316';
+        if (val >= 20000) return '#ea580c';
+        if (val >= 5000) return '#c2410c';
+        return '#7c2d12';
+      } else { // produktivitas
+        if (val >= 0.8) return '#fbbf24';
+        if (val >= 0.6) return '#f97316';
+        if (val >= 0.4) return '#ea580c';
+        if (val >= 0.2) return '#c2410c';
+        return '#7c2d12';
+      }
+    }
+
+    function updateLegend(metric) {
+      const legs = document.querySelectorAll('#map-legend-container span');
+      if (metric === 'luas') {
+        legs[0].innerText = '0–10 rb ha'; legs[1].innerText = '10–50 rb ha';
+        legs[2].innerText = '50–100 rb ha'; legs[3].innerText = '100–200 rb ha'; legs[4].innerText = '>200 rb ha';
+      } else if (metric === 'produksi') {
+        legs[0].innerText = '0–5 rb ton'; legs[1].innerText = '5–20 rb ton';
+        legs[2].innerText = '20–50 rb ton'; legs[3].innerText = '50–100 rb ton'; legs[4].innerText = '>100 rb ton';
+      } else {
+        legs[0].innerText = '0–0.2 ton/ha'; legs[1].innerText = '0.2–0.4 ton/ha';
+        legs[2].innerText = '0.4–0.6 ton/ha'; legs[3].innerText = '0.6–0.8 ton/ha'; legs[4].innerText = '>0.8 ton/ha';
+      }
+    }
+
+    // Load GeoJSON and render choropleth
+    let geojsonLayer;
+    fetch("{% static 'story/indonesia-provinces.geojson' %}")
+      .then(r => r.json())
+      .then(geojsonData => {
+        function resetHighlight(e) { geojsonLayer.resetStyle(e.target); }
+        function highlightFeature(e) {
+          const layer = e.target;
+          layer.setStyle({ weight: 3, color: '#d4a84b', fillOpacity: 0.85 });
+          layer.bringToFront();
+        }
+
+        geojsonLayer = L.geoJSON(geojsonData, {
+          style: function (feature) {
+            const data = getProvData(feature.properties.PROVINSI);
+            const metric = document.getElementById('map-metric-select').value;
+            const color = data ? getColor(data[metric], metric) : '#2d1200';
+            return {
+              fillColor: color,
+              weight: 1,
+              opacity: 0.8,
+              color: 'rgba(212,168,75,0.4)',
+              fillOpacity: 0.7,
+            };
+          },
+          onEachFeature: function (feature, layer) {
+            const data = getProvData(feature.properties.PROVINSI);
+            const displayName = PROV_ALIAS[feature.properties.PROVINSI] || feature.properties.PROVINSI;
+            if (data) {
+              layer.bindTooltip(`
+                <div class="map-info-box" style="padding:0; background:transparent; border:none;">
+                  <strong style="color:var(--gold); font-size:1.1rem;">${displayName}</strong><br>
+                  <span style="font-size:0.85rem;">🌱 Luas: <b>${data.luas.toLocaleString('id-ID')} ha</b></span><br>
+                  <span style="font-size:0.85rem;">☕ Produksi: <b>${data.produksi.toLocaleString('id-ID')} ton</b></span><br>
+                  <span style="font-size:0.85rem;">📊 Produktivitas: <b>${data.produktivitas.toFixed(2)} ton/ha</b></span>
+                </div>
+              `, { sticky: true, className: "custom-map-tooltip" });
+            }
+            layer.on({ mouseover: highlightFeature, mouseout: resetHighlight });
+          }
+        }).addTo(map);
+
+        map.fitBounds(geojsonLayer.getBounds());
+        updateMapAndList(); // Init visualization
+      });
+
+    // ===== DYNAMIC METRIC SELECTION =====
+    function renderTop10(metric) {
+      const sorted = [...PROVINSI_DATA].sort((a, b) => b[metric] - a[metric]).slice(0, 10);
+      const maxVal = sorted[0][metric];
+      const provList = document.getElementById('province-list');
+      provList.innerHTML = '';
+
+      sorted.forEach(d => {
+        const pct = (d[metric] / maxVal * 100).toFixed(1);
+        let mainValStr = '';
+        if (metric === 'produksi') mainValStr = d.produksi.toLocaleString('id-ID') + ' ton';
+        else if (metric === 'luas') mainValStr = d.luas.toLocaleString('id-ID') + ' ha';
+        else mainValStr = d.produktivitas.toFixed(2) + ' ton/ha';
+
+        const row = document.createElement('div');
+        row.className = 'province-row';
+        row.innerHTML = `
+      <span>${d.provinsi}</span>
+      <span class="prod-bar-wrap">
+        <div class="prod-bar" style="width:${pct}%"></div>
+        ${mainValStr}
+      </span>
+      <span>${metric === 'luas' ? '--' : d.luas.toLocaleString('id-ID') + ' ha'}</span>
+      <span>${metric === 'produktivitas' ? '--' : d.produktivitas.toFixed(2)}</span>
+    `;
+        provList.appendChild(row);
+      });
+    }
+
+    function updateMapAndList() {
+      const metric = document.getElementById('map-metric-select').value;
+      if (geojsonLayer) {
+        geojsonLayer.setStyle((feature) => {
+          const data = getProvData(feature.properties.PROVINSI);
+          const color = data ? getColor(data[metric], metric) : '#2d1200';
+          return { fillColor: color };
+        });
+      }
+      updateLegend(metric);
+      renderTop10(metric);
+    }
+
+    document.getElementById('map-metric-select').addEventListener('change', updateMapAndList);
+
+    // ===== GERAI CHART =====
+    const geraiCtx = document.getElementById('geraiChart').getContext('2d');
+    new Chart(geraiCtx, {
+      type: 'bar',
+      data: {
+        labels: GERAI_KOPI.map(d => d.tahun),
+        datasets: [{
+          label: 'Gerai Kopi (ribu)',
+          data: GERAI_KOPI.map(d => d.jumlah),
+          backgroundColor: [
+            'rgba(196,126,58,0.5)',
+            'rgba(196,126,58,0.65)',
+            'rgba(212,168,75,0.75)',
+            'rgba(212,168,75,0.95)',
+          ],
+          borderColor: 'rgba(212,168,75,0.8)',
+          borderWidth: 1,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(26,10,0,0.95)',
+            titleColor: '#d4a84b',
+            bodyColor: '#f5ead8',
+            callbacks: {
+              label: ctx => ` ${ctx.parsed.y} ribu gerai`
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: 'rgba(245,234,216,0.7)', font: { family: "'Space Mono'" } }
+          },
+          y: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: 'rgba(245,234,216,0.7)', font: { family: "'Space Mono'" } },
+            beginAtZero: true,
+          }
+        }
+      }
+    });
+
+    // ===== TRADE CARDS (Update to display only values) =====
+    const tradeContainer = document.getElementById('trade-cards');
+    EKSPOR_IMPOR.forEach(d => {
+      // Ekspor card
+      const eCard = document.createElement('div');
+      eCard.className = 'trade-card ekspor';
+      eCard.innerHTML = `
+    <div class="trade-year">📅 ${d.tahun}</div>
+    <div class="trade-type">🚀 EKSPOR</div>
+    <div class="trade-number">${(d.ekspor_vol / 1000).toFixed(0)} Rb <small style="font-size:1rem">ton</small></div>
+    <div class="trade-unit">📦 Volume</div>
+    <div class="trade-number" style="font-size:1.4rem;margin-top:0.5rem;">$${(d.ekspor_val / 1000000).toFixed(2)} M</div>
+    <div class="trade-unit">💰 Nilai USD</div>
+  `;
+      tradeContainer.appendChild(eCard);
+
+      // Impor card
+      const iCard = document.createElement('div');
+      iCard.className = 'trade-card impor';
+      iCard.innerHTML = `
+    <div class="trade-year">📅 ${d.tahun}</div>
+    <div class="trade-type" style="color:#7ab87a;">📥 IMPOR</div>
+    <div class="trade-number" style="color:#7ab87a;">${(d.impor_vol / 1000).toFixed(1)} Rb <small style="font-size:1rem">ton</small></div>
+    <div class="trade-unit">📦 Volume</div>
+    <div class="trade-number" style="font-size:1.4rem;margin-top:0.5rem;color:#7ab87a;">$${(d.impor_val / 1000).toFixed(0)} Rb</div>
+    <div class="trade-unit">💰 Nilai USD</div>
+  `;
+      tradeContainer.appendChild(iCard);
+    });
+
+    // ===== CARGO SHIP CHART GENG =====
+    const cargoStacks = document.getElementById('cargo-stacks');
+    const shipMaxVol = Math.max(EKSPOR_IMPOR[0].ekspor_vol, EKSPOR_IMPOR[1].ekspor_vol);
+
+    const cargoData = [
+      { label: 'Eks 2023', vol: EKSPOR_IMPOR[0].ekspor_vol, color: '#d4a84b' },
+      { label: 'Eks 2024', vol: EKSPOR_IMPOR[1].ekspor_vol, color: '#c47e3a' },
+      { label: 'Imp 2023', vol: EKSPOR_IMPOR[0].impor_vol, color: '#7ab87a' },
+      { label: 'Imp 2024', vol: EKSPOR_IMPOR[1].impor_vol, color: '#3d6e3a' }
+    ];
+
+    cargoData.forEach(item => {
+      const hPct = Math.max((item.vol / shipMaxVol) * 100, 5); // min 5% height
+      const stack = document.createElement('div');
+      stack.className = 'cargo-stack';
+      stack.innerHTML = `
+        <div class="cargo-label-top">${(item.vol / 1000).toFixed(0)} Rb</div>
+        <div class="cargo-box-wrapper" style="height: ${hPct}%;">
+          <div class="cargo-box" style="background:${item.color};"></div>
+        </div>
+        <div class="cargo-label-bottom">${item.label}</div>
+      `;
+      cargoStacks.appendChild(stack);
+    });
+
+    // ===== NEGARA BARS =====
+    const COUNTRY_FLAGS = { 'USA': '🇺🇸', 'Egypt': '🇪🇬', 'Malaysia': '🇲🇾', 'Belgium': '🇧🇪', 'Russia': '🇷🇺' };
+    const maxNilai = Math.max(...TOP_NEGARA.map(n => n.nilai));
+    const negaraBars = document.getElementById('negara-bars');
+    TOP_NEGARA.forEach(n => {
+      const pct = (n.nilai / maxNilai * 100).toFixed(1);
+      const flag = COUNTRY_FLAGS[n.negara] || '🌐';
+      const row = document.createElement('div');
+      row.className = 'negara-row';
+      row.innerHTML = `
+    <div class="negara-name">${flag} ${n.negara}</div>
+    <div class="negara-bar-wrap">
+      <div class="negara-bar" style="width:0%" data-width="${pct}%"></div>
+    </div>
+    <div class="negara-val">$${(n.nilai / 1000).toFixed(0)} Rb</div>
+  `;
+      negaraBars.appendChild(row);
+    });
+
+    // Animate bars on scroll
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          document.querySelectorAll('.negara-bar').forEach(bar => {
+            bar.style.width = bar.getAttribute('data-width');
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+    if (negaraBars) barObserver.observe(negaraBars);
+  </script>
+
+</body>
+
+</html>
