@@ -1356,6 +1356,7 @@
     <div class="nav-logo">☕ <span>Kopi</span> Indonesia</div>
     <ul class="nav-links">
       <li><a href="#hero">Beranda</a></li>
+      <li><a href="#prologue">Prolog</a></li>
       <li><a href="#beans">Jenis</a></li>
       <li><a href="#map-section">Sebaran</a></li>
       <li><a href="#trend">Tren</a></li>
@@ -1433,8 +1434,56 @@
     </div>
   </section>
 
-  <!-- Transition: hero → beans -->
-  <div class="section-transition" style="background:linear-gradient(to bottom, #000000, #2d1200)"></div>
+  <!-- Transition: hero → prologue -->
+  <div class="section-transition" style="background:linear-gradient(to bottom, #1a0a00, #2d1200)"></div>
+
+  <!-- ===== PROLOGUE ===== -->
+  <section id="prologue"
+    style="background: #2d1200; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem;">
+    <!-- Deco Icons for Prologue -->
+    <div class="deco-icon floating-slow"
+      style="width: 140px; top: 15%; left: 8%; --rot: -15deg; opacity: 0; z-index: 1;">
+      <img src="{% static 'story/assets/8.webp' %}" alt="">
+    </div>
+    <div class="deco-icon floating"
+      style="width: 110px; bottom: 20%; right: 10%; --rot: 20deg; opacity: 0; z-index: 1;">
+      <img src="{% static 'story/assets/12.webp' %}" alt="">
+    </div>
+
+    <div class="reveal" style="max-width: 800px; z-index: 2; position: relative;">
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); margin-bottom: 1.5rem;">
+        Mengapa Kopi?</h2>
+      <p style="font-size: 1.25rem; line-height: 1.8; color: var(--cream); margin-bottom: 3rem;">
+        Kopi bukan sekadar komoditas pendorong ekonomi. Ia adalah identitas, bagian dari budaya luhur, serta saksi bisu
+        sejarah dan keseharian jutaan keluarga di Nusantara.
+      </p>
+
+      <div
+        style="background: rgba(26,10,0,0.6); border: 1px solid rgba(212,168,75,0.4); border-radius: 16px; padding: 3rem 2rem; box-shadow: 0 15px 40px rgba(0,0,0,0.6); backdrop-filter: blur(5px);">
+        <h3
+          style="font-family: 'Space Mono', monospace; font-size: 1.1rem; color: rgba(245,234,216,0.8); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem;">
+          Fakta Membanggakan</h3>
+        <p style="font-size: 1.2rem; line-height: 1.6; color: var(--cream);">
+          Saat ini, Indonesia kokoh berdiri sebagai
+        </p>
+        <div
+          style="font-family: 'Playfair Display', serif; font-size: 5rem; font-weight: 900; color: var(--gold); margin: 1rem 0; text-shadow: 0 5px 25px rgba(212, 168, 75, 0.5);">
+          #4
+        </div>
+        <p
+          style="font-family: 'Playfair Display', serif; font-size: 1.8rem; line-height: 1.4; color: var(--gold); font-weight: 700; margin-bottom: 1.5rem;">
+          Produsen Kopi Terbesar di Dunia
+        </p>
+        <p style="font-size: 1.05rem; line-height: 1.7; color: rgba(245,234,216,0.8);">
+          Menyumbang lebih dari 7% total produksi kopi global, mendampingi raksasa produsen lainnya seperti Brasil,
+          Vietnam, dan Kolombia dalam memenuhi dahaga para pencinta kopi di seluruh penjuru bumi.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transition: prologue → beans -->
+  <div class="section-transition" style="background:linear-gradient(to bottom, #2d1200, #1a0a00)"></div>
 
   <!-- ===== ARABICA VS ROBUSTA ===== -->
   <section id="beans">
