@@ -110,12 +110,15 @@
       color: var(--cream);
       text-decoration: none;
       opacity: 0.7;
-      transition: opacity 0.2s, color 0.2s;
+      display: inline-block;
+      transition: opacity 0.2s, color 0.2s, transform 0.2s, text-shadow 0.2s;
     }
 
     .nav-links a:hover {
       opacity: 1;
       color: var(--gold);
+      text-shadow: 0 0 8px rgba(212, 168, 75, 0.5);
+      transform: translateY(-2px);
     }
 
     /* ======= SECTIONS ======= */
@@ -1138,12 +1141,19 @@
 
     .bean-card {
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, filter 0.4s ease;
+      position: relative;
+    }
+
+    .beans-split:hover .bean-card:not(:hover) {
+      filter: grayscale(0.6) opacity(0.7) blur(2px);
+      transform: scale(0.95);
     }
 
     .bean-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(212, 168, 75, 0.2);
+      z-index: 2;
     }
 
     .click-hint {
@@ -1444,6 +1454,8 @@
         </div>
       </div>
     </div>
+
+
   </section>
 
   <!-- Transition: hero → prologue -->
@@ -1826,18 +1838,20 @@
     // ===== DECO ICON SCROLL REVEAL (ANIME.JS) =====
     const decoObserver = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) {
-          const el = e.target;
-          const initialRot = parseFloat(el.style.getPropertyValue('--rot')) || 0;
+        const el = e.target;
+        const initialRot = parseFloat(el.style.getPropertyValue('--rot')) || 0;
 
+        if (e.isIntersecting) {
+          anime.remove(el); // Stop any ongoing exit or floating animations
+          
           anime({
             targets: el,
             scale: [0.2, 1],
             opacity: [0, 0.75],
             translateY: [60, 0],
             rotate: [initialRot - 40, initialRot],
-            duration: 2000,
-            delay: anime.random(50, 400),
+            duration: 1500,
+            delay: anime.random(50, 300),
             easing: 'easeOutElastic(1, .5)',
             complete: function () {
               // Continuous Drifting/Floating Animation
@@ -1853,11 +1867,21 @@
               });
             }
           });
-
-          decoObserver.unobserve(el);
+        } else {
+          // Animate Out when leaving viewport
+          anime.remove(el);
+          anime({
+            targets: el,
+            scale: 0.2,
+            opacity: 0,
+            translateY: 60,
+            rotate: initialRot - 40,
+            duration: 600,
+            easing: 'easeInQuad'
+          });
         }
       });
-    }, { threshold: 0.05 });
+    }, { threshold: 0, rootMargin: "-15% 0px -15% 0px" });
     document.querySelectorAll('.deco-icon').forEach(el => decoObserver.observe(el));
 
     // ===== HERO ANIMATION (ON LOAD) =====
@@ -1904,6 +1928,34 @@
             }
           });
       }
+
+      // 4. Number Count-Up Animation
+      const heroStats = document.querySelectorAll('.hero-stat .num');
+      heroStats.forEach((el, index) => {
+        const text = el.innerText;
+        const match = text.match(/^([^\d]*)([\d,]+)(.*)$/);
+        if (match) {
+          const prefix = match[1];
+          const numStr = match[2].replace(',', '.');
+          const suffix = match[3];
+          const targetNum = parseFloat(numStr);
+          
+          let obj = { val: 0 };
+          anime({
+            targets: obj,
+            val: targetNum,
+            duration: 2500,
+            easing: 'easeOutQuart',
+            delay: 1000 + (index * 200),
+            update: function() {
+              let currentVal = obj.val;
+              let isFloat = numStr.includes('.');
+              let displayNum = isFloat ? currentVal.toFixed(1).replace('.', ',') : Math.floor(currentVal);
+              el.innerText = prefix + displayNum + suffix;
+            }
+          });
+        }
+      });
     });
 
     // ===== BEAN DETAIL PANELS =====
