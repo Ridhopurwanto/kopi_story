@@ -1431,7 +1431,7 @@
           <span class="label">Ha Lahan Kopi</span>
         </div>
         <div class="hero-stat">
-          <span class="num">774 Rb</span>
+          <span class="num">813 Rb</span>
           <span class="label">Ton Produksi</span>
         </div>
         <div class="hero-stat">
@@ -1447,11 +1447,11 @@
   </section>
 
   <!-- Transition: hero → prologue -->
-  <div class="section-transition" style="background:linear-gradient(to bottom, #1a0a00, #2d1200)"></div>
+  <div class="section-transition" style="background:linear-gradient(to bottom, #000000, #1a0a00)"></div>
 
   <!-- ===== PROLOGUE ===== -->
   <section id="prologue"
-    style="background: #2d1200; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem;">
+    style="background: #1a0a00; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem;">
     <!-- Deco Icons for Prologue -->
     <div class="deco-icon floating-slow"
       style="width: 140px; top: 15%; left: 8%; --rot: -15deg; opacity: 0; z-index: 1;">
@@ -1495,7 +1495,7 @@
   </section>
 
   <!-- Transition: prologue → beans -->
-  <div class="section-transition" style="background:linear-gradient(to bottom, #2d1200, #1a0a00)"></div>
+  <div class="section-transition" style="background:linear-gradient(to bottom, #1a0a00, #2d1200)"></div>
 
   <!-- ===== ARABICA VS ROBUSTA ===== -->
   <section id="beans">
@@ -2039,12 +2039,35 @@
       const provList = document.getElementById('province-list');
       provList.innerHTML = '';
 
+      // Update header dynamically
+      const headerEl = document.querySelector('.province-row.header');
+      if (metric === 'produksi') {
+        headerEl.innerHTML = `<span>Provinsi</span><span>Produksi (ton)</span><span>Luas (ha)</span><span>Prdkt.</span>`;
+      } else if (metric === 'luas') {
+        headerEl.innerHTML = `<span>Provinsi</span><span>Luas (ha)</span><span>Produksi (ton)</span><span>Prdkt.</span>`;
+      } else {
+        headerEl.innerHTML = `<span>Provinsi</span><span>Prdkt. (ton/ha)</span><span>Produksi (ton)</span><span>Luas (ha)</span>`;
+      }
+
       sorted.forEach(d => {
         const pct = (d[metric] / maxVal * 100).toFixed(1);
         let mainValStr = '';
-        if (metric === 'produksi') mainValStr = d.produksi.toLocaleString('id-ID') + ' ton';
-        else if (metric === 'luas') mainValStr = d.luas.toLocaleString('id-ID') + ' ha';
-        else mainValStr = d.produktivitas.toFixed(2) + ' ton/ha';
+        let col3Str = '';
+        let col4Str = '';
+
+        if (metric === 'produksi') {
+          mainValStr = d.produksi.toLocaleString('id-ID') + ' ton';
+          col3Str = d.luas.toLocaleString('id-ID');
+          col4Str = d.produktivitas.toFixed(2);
+        } else if (metric === 'luas') {
+          mainValStr = d.luas.toLocaleString('id-ID') + ' ha';
+          col3Str = d.produksi.toLocaleString('id-ID');
+          col4Str = d.produktivitas.toFixed(2);
+        } else {
+          mainValStr = d.produktivitas.toFixed(2) + ' ton/ha';
+          col3Str = d.produksi.toLocaleString('id-ID');
+          col4Str = d.luas.toLocaleString('id-ID');
+        }
 
         const row = document.createElement('div');
         row.className = 'province-row';
@@ -2054,8 +2077,8 @@
         <div class="prod-bar" style="width:${pct}%"></div>
         ${mainValStr}
       </span>
-      <span>${metric === 'luas' ? '--' : d.luas.toLocaleString('id-ID') + ' ha'}</span>
-      <span>${metric === 'produktivitas' ? '--' : d.produktivitas.toFixed(2)}</span>
+      <span>${col3Str}</span>
+      <span>${col4Str}</span>
     `;
         provList.appendChild(row);
       });
